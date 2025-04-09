@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72c88b91a21ec27429130b3f1073866d, type: 3}
+  m_Name: BTSequence
+  m_EditorClassIdentifier: 
+  children:
+  - {fileID: 11400000, guid: faf03b08dd224664dabd7113a0255774, type: 2}
+  - {fileID: 11400000, guid: 44f9e1cd1c098684994efff512644bb1, type: 2}
+  - {fileID: 11400000, guid: fafc9ad5b13efa44f867a6a55440b92c, type: 2}
