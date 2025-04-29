@@ -23,16 +23,22 @@ public class PlayerController : MonoBehaviour, @MolanoRimbauArnau_M17UF4R1.IPlay
     [SerializeField] private int upperBodyLayerIndex = 1; // Index del layer d'aim (0 es el base layer, 1 es el d'aim)
 
     private Vector2 inputVector = Vector2.zero;
+    private Vector2 lookInput = Vector2.zero;
     private bool isGrounded = false;
     private bool isRunning = false;
     private bool isCrouched = false;
-    private bool isAiming = false;
+    private bool isAiming = true;
     private bool isShooting = false; // Variable para controlar el disparo
 
 
     [SerializeField] private CinemachineVirtualCamera thirdPersonCam;
     [SerializeField] private CinemachineVirtualCamera firstPersonCam;
 
+    [SerializeField] private Transform activeCameraTransform;
+    [SerializeField] private Transform firstPersonCamTransform;
+    [SerializeField] private Transform target;
+    [SerializeField] private float aimTargetDistance = 2f;
+    [SerializeField] private float verticalAimRange = 1f; // Rango vertical del objetivo de apuntar
 
     void Awake()
     {
@@ -63,6 +69,10 @@ public class PlayerController : MonoBehaviour, @MolanoRimbauArnau_M17UF4R1.IPlay
         UpdateBaseLayerAnimation();
         UpdateJumpHeight();
         UpdateAimLayerAnimation();
+        UpdateActiveCamera();
+        RotatePlayerAndCamera(); // Rotar el jugador y la cámara
+        UpdateAimTarget(); // Actualizar la posición del aimTarget
+
     }
 
     void FixedUpdate()
@@ -74,18 +84,33 @@ public class PlayerController : MonoBehaviour, @MolanoRimbauArnau_M17UF4R1.IPlay
     {
         Vector3 movement = new Vector3(inputVector.x, 0, inputVector.y);
 
-        movement = transform.TransformDirection(movement); // Transformar la dirección de movimiento a espacio local
+        Vector3 camForward = activeCameraTransform.forward;
+        Vector3 camRight = activeCameraTransform.right;
+        camForward.y = 0; 
+        camRight.y = 0;
+        camForward.Normalize();
+        camRight.Normalize();
+
+        Vector3 moveDirection = camForward * inputVector.y + camRight * movement.x;
+        moveDirection.Normalize(); // Normalizar el vector de movimiento
+
 
         // Ajustar la velocidad en función de si está agachado o no
         float currentSpeed = isCrouched ? crouchSpeed : (isRunning ? runSpeed : walkSpeed);
 
         // Usamos la velocidad directamente para evitar problemas de aplicación de fuerza
-        Vector3 moveVelocity = movement * currentSpeed;
+        Vector3 moveVelocity = moveDirection * currentSpeed;
 
         rb.velocity = new Vector3(moveVelocity.x, rb.velocity.y, moveVelocity.z);
 
         // Debugging: Verifica las velocidades en cada frame
         //Debug.Log($"Current Speed: {currentSpeed}, Velocity: {moveVelocity}, Input Vector: {inputVector}");
+    
+        if(moveDirection != Vector3.zero && !isAiming)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
     }
 
 
@@ -172,13 +197,58 @@ public class PlayerController : MonoBehaviour, @MolanoRimbauArnau_M17UF4R1.IPlay
     {
         if(animator != null)
         {
-            float aimWeight = isAiming ? 1f : 0f; //es el weight del layer d'aim
+            float aimWeight = isAiming ? 1f : 1f; //es el weight del layer d'aim
             float currentWeight = animator.GetLayerWeight(upperBodyLayerIndex); //layer 1 es el d'aim
             float newWeight = Mathf.Lerp(currentWeight, aimWeight, Time.deltaTime * aimBlendSpeed); //fa la transicio entre el layer 0 i el layer 1
             animator.SetLayerWeight(upperBodyLayerIndex, newWeight); //actualitza el weight del layer d'aim
         }
     }
 
+    private void UpdateActiveCamera()
+    {
+        if (isAiming)
+        {
+            activeCameraTransform = firstPersonCam.transform; //activa la camara de 1a persona
+        }
+        else
+        {
+            activeCameraTransform = thirdPersonCam.transform; //activa la camara de 3a persona
+        }
+    }
+
+    private float cameraPitch = 0f; // rotación vertical (pitch)
+
+    private void RotatePlayerAndCamera()
+    {
+        float mouseX = lookInput.x * rotationSpeed * Time.deltaTime;
+        float mouseY = lookInput.y * rotationSpeed * Time.deltaTime;
+
+        // Rota el jugador horizontalmente
+        transform.Rotate(Vector3.up * mouseX);
+
+        // Rota la cámara verticalmente (con límite)
+        cameraPitch -= mouseY;
+        cameraPitch = Mathf.Clamp(cameraPitch, -80f, 80f);
+
+        activeCameraTransform.localEulerAngles = new Vector3(cameraPitch, 0f, 0f);
+    }
+
+    void UpdateAimTarget()
+    {
+        if (isAiming)
+        {
+            Vector3 forward = firstPersonCam.transform.forward;
+            Vector3 up = firstPersonCam.transform.up;
+
+            // Coloca el aimTarget delante de la cámara, con desplazamiento vertical según el pitch
+            Vector3 targetPosition = firstPersonCam.transform.position + forward * aimTargetDistance;
+
+            // Añadimos un offset vertical en función del pitch
+            targetPosition += up * Mathf.Sin(cameraPitch * Mathf.Deg2Rad) * verticalAimRange;
+
+            target.position = targetPosition;
+        }
+    }
 
 
 
@@ -199,17 +269,7 @@ public class PlayerController : MonoBehaviour, @MolanoRimbauArnau_M17UF4R1.IPlay
 
     public void OnLook(InputAction.CallbackContext context)
     {
-        Vector2 lookInput = context.ReadValue<Vector2>();
-        if (lookInput != Vector2.zero)
-        {
-            //rotar el jugador en 2 ejes
-            float rotationX = lookInput.x * rotationSpeed * Time.deltaTime;
-            float rotationY = lookInput.y * rotationSpeed * Time.deltaTime;
-
-            transform.Rotate(rotationX,rotationY , 0); //rotar el jugador en el eix Y
-            
-        }
-        
+        lookInput = context.ReadValue<Vector2>();
     }
 
     public void OnFire(InputAction.CallbackContext context)
