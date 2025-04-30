@@ -26,6 +26,8 @@ public class EnemyAI : MonoBehaviour
     public LayerMask playerMask;
     public LayerMask obstacleMask;
 
+    public Animator animator;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -34,6 +36,8 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
+        bool canseePlayer = CanSeePlayer(); //comprova si pot veure al player
+
         if (CanSeePlayer()) //si pot veure al player
         {
             lastSeenPosition = player.position; //guarda la posicio del player
@@ -42,11 +46,22 @@ public class EnemyAI : MonoBehaviour
                 Destroy(searchZoneInstance);
                 searchZoneInstance = null;
             }
+            if(animator != null)
+            {
+                animator.SetBool("CanSeePlayer", true);
+            }
            
         }
-        else if (searchZoneInstance == null && health < 100) //si no pot veure al player i té menos de 100 de vida crea una zona de busqueda a la ultima posicio on va veure al player
+        else
         {
-            CreateSearchZone();
+            if(animator != null)
+            {
+                animator.SetBool("CanSeePlayer", false);
+            }
+            if (searchZoneInstance == null && health < 100) //si no pot veure al player i té menos de 100 de vida crea una zona de busqueda a la ultima posicio on va veure al player
+            {
+                CreateSearchZone();
+            }
         }
 
         behaviourTree.Execute(this);
