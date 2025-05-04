@@ -3,13 +3,25 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BTChase", menuName = "BehaviourTree/Chase")]
 public class BTChase : BTNode
 {
+    [SerializeField] private int stoppedAttakckingLayerIndex = 2; // Index del layer d'atacar quiet
+    float attackWeight = 0f;
+    bool readyToAttack = true; //per saber si està preparat per atacar
     public override bool Execute(EnemyAI enemy)
     {
-        if (enemy.CanSeePlayer()) //si l'enemic pot veure al jugador
+        if (enemy.CanSeePlayer())
         {
-            enemy.agent.SetDestination(enemy.player.position); //li passa la posició del jugador com a destí
-            return true; //si torna true, vol dir que el node ha estat exitós
+            Vector3 targetPosition = new Vector3(enemy.player.position.x, enemy.transform.position.y, enemy.player.position.z);
+            float distance = Vector3.Distance(enemy.transform.position, enemy.player.position);
+           
+            enemy.agent.SetDestination(targetPosition);
+
+            return true;
+            
         }
-        return false; //si no es compleix la condició, torna false
+
+       
+        return false;
+       
     }
+
 }

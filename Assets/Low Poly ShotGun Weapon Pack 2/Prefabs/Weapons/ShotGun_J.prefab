@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5354665419788635466}
   - component: {fileID: 1519811473823158187}
   - component: {fileID: 5822943971794262133}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ShotGun_J_Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +30,8 @@ Transform:
   m_LocalPosition: {x: -0, y: 0.046483666, z: 0.5345398}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 49251254289341931}
   m_Father: {fileID: 4056028632207431010}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1519811473823158187
@@ -94,7 +95,7 @@ GameObject:
   - component: {fileID: 1987834455211135485}
   - component: {fileID: 7899426761119163641}
   - component: {fileID: 7441118272955039418}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ShotGun_J_Stock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +178,7 @@ GameObject:
   - component: {fileID: 588570216179345457}
   - component: {fileID: 4774539126699394086}
   - component: {fileID: 1716964643980814588}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ShotGun_J_BarrelGuard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +261,7 @@ GameObject:
   - component: {fileID: 3545932082165475798}
   - component: {fileID: 6318131047222883055}
   - component: {fileID: 7220607501081490373}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ShotGun_J_Mag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -343,7 +344,7 @@ GameObject:
   - component: {fileID: 3720809701564113521}
   - component: {fileID: 8113783331084026647}
   - component: {fileID: 4171842462922371523}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ShotGun_J_Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -424,7 +425,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4056028632207431010}
-  m_Layer: 0
+  - component: {fileID: 8140588844828939873}
+  m_Layer: 3
   m_Name: ShotGun_J
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -441,8 +443,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5354665419788635466}
   - {fileID: 588570216179345457}
@@ -454,6 +456,29 @@ Transform:
   - {fileID: 3720809701564113521}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &8140588844828939873
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3675561962541535192}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.12598257
+  m_Height: 0.8050761
+  m_Direction: 2
+  m_Center: {x: -0.009999966, y: 0.000000022778748, z: -0.09398867}
 --- !u!1 &4142285671670539247
 GameObject:
   m_ObjectHideFlags: 0
@@ -465,7 +490,7 @@ GameObject:
   - component: {fileID: 7840358275175540393}
   - component: {fileID: 9124827769244181636}
   - component: {fileID: 7779088051669566008}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ShotGun_J_Bolt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -548,7 +573,7 @@ GameObject:
   - component: {fileID: 8471906928189339827}
   - component: {fileID: 5619853840896008595}
   - component: {fileID: 6460360517034592067}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ShotGun_J_Reciver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -631,7 +656,7 @@ GameObject:
   - component: {fileID: 3219564884304776870}
   - component: {fileID: 9075055999765647170}
   - component: {fileID: 806142992394077887}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ShotGun_J_Grip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -703,3 +728,34 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7511282788115233472
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 49251254289341931}
+  m_Layer: 3
+  m_Name: ShootSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &49251254289341931
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7511282788115233472}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.002, y: -0.001, z: 0.392}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5354665419788635466}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

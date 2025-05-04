@@ -1,6 +1,8 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEditor.SearchableEditorWindow;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -11,12 +13,14 @@ public class EnemyAI : MonoBehaviour
 
     private int patrolIndex = 0;
 
-    public BTNode behaviourTree;
+    public BTNode rootNode;
 
     private Vector3 lastSeenPosition;
 
     private GameObject searchZoneInstance;
     public GameObject searchZonePrefab;
+    public bool isChasingPlayer = false; //per saber si l'enemic esta perseguint al jugador
+    public bool isFleeing = false; //per saber si l'enemic esta fugint o no
 
     public float health = 100f;
     public float viewRadius = 10f; //visio normal
@@ -46,7 +50,7 @@ public class EnemyAI : MonoBehaviour
                 Destroy(searchZoneInstance);
                 searchZoneInstance = null;
             }
-            if(animator != null)
+            if(animator != null && health > 50)
             {
                 animator.SetBool("CanSeePlayer", true);
             }
@@ -54,7 +58,7 @@ public class EnemyAI : MonoBehaviour
         }
         else
         {
-            if(animator != null)
+            if(animator != null && health > 50)
             {
                 animator.SetBool("CanSeePlayer", false);
             }
@@ -64,7 +68,12 @@ public class EnemyAI : MonoBehaviour
             }
         }
 
-        behaviourTree.Execute(this);
+        rootNode.Execute(this);
+    }
+
+    public void ChangeVelocity(float velocity)
+    {
+        agent.speed = velocity;
     }
 
     public void NextPatrolPoint() //funcio per anar al seguent punt de patrulla
@@ -92,6 +101,7 @@ public class EnemyAI : MonoBehaviour
 
         if (distanceToPlayer < closeDetectionRadius) //si el jugador esta molt aprop el detecta (l'escolta)
         {
+            if(isFleeing == false) { SmoothLookAt(); }
             return true;
         }
 
@@ -103,6 +113,8 @@ public class EnemyAI : MonoBehaviour
                 //si no hi ha obstacles en mitg de la linia de visio retorna true (el detecta)
                 if (!Physics.Raycast(transform.position, directionToPlayer, distanceToPlayer, obstacleMask)) //si no hi ha res entre el enemic i el player
                 {
+                    if(isFleeing == false) { SmoothLookAt(); }
+
                     return true; //retorna que si el pot veure
                 }
             }
@@ -111,10 +123,26 @@ public class EnemyAI : MonoBehaviour
         return false; //no el pot veure
     }
 
+    void SmoothLookAt()
+    {
+        Vector3 direction = (player.position - transform.position).normalized;
+        if (direction.magnitude > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+        }
+    }
+
     void CreateSearchZone()
     {
         searchZoneInstance = Instantiate(searchZonePrefab, lastSeenPosition, Quaternion.identity); //instancia el prefab de la zona de busqueda
         searchZoneInstance.GetComponent<SearchZone>().GenerateNavMesh(); //genera el navmesh de la zona de busqueda
+    }
+
+    public void Hurt(float damage)
+    {
+        if (damage < 0) damage = 0;
+        health -= damage;
     }
 
     void OnDrawGizmos()
