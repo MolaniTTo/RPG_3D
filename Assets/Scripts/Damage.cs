@@ -9,16 +9,15 @@ public class Damage: MonoBehaviour
     private float lastPlayerHitTime = -Mathf.Infinity;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        /*if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             EnemyAI enemyAI = other.GetComponentInParent<EnemyAI>();
             if (enemyAI != null)
             {
                 enemyAI.Hurt(damage);
-                Destroy(gameObject);
             }
-        }
-        else if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        }*/
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             if (Time.time - lastPlayerHitTime < damageCooldown)
                 return;

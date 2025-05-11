@@ -319,7 +319,16 @@ public class PlayerController : MonoBehaviour, @MolanoRimbauArnau_M17UF4R1.IPlay
 
             Vector3 direction = (targetPoint - shootSpawn.position).normalized;
             GameObject bulletInstance = Instantiate(bullet, shootSpawn.position, Quaternion.identity);
-
+            //si hit colisiona con un layer mask con el nombre de enemy
+            if (hit.collider != null && hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            {
+                EnemyAI enemyAI = hit.collider.GetComponentInParent<EnemyAI>();
+                if (enemyAI != null)
+                {
+                    enemyAI.Hurt(10f); //Fa mal al enemic
+                }
+            }
+         
             bulletInstance.GetComponent<Rigidbody>().velocity = direction * 100f;
             Destroy(bulletInstance, 2f);
         }

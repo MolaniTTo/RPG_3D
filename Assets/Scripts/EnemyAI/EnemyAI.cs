@@ -141,7 +141,12 @@ public class EnemyAI : MonoBehaviour
 
     public void Hurt(float damage)
     {
-        if (damage < 0) damage = 0;
+        if (damage < 0)
+        {
+            damage = 0;
+            Destroy(gameObject); //si el dany es negatiu l'enemic mor
+        }
+
         health -= damage;
     }
 

@@ -28,7 +28,6 @@ public class BTAttack : BTNode
             float currentWeight = enemy.animator.GetLayerWeight(upperBodyLayerIndex); //layer 1 es el d'aim
             float newWeight = Mathf.Lerp(currentWeight, attackWeight, Time.deltaTime * 5f); //disminueixo el weight del layer d'aim
             enemy.animator.SetLayerWeight(upperBodyLayerIndex, newWeight); //actualitza el weight del layer d'aim
-            Debug.LogWarning("No Attack"); //per veure si no ataca
         }
 
         return false;
